@@ -128,6 +128,17 @@ def gradient_descent(X, Y, W, B, alpha, max_iter):
     return cost_history, W, B, i
 
 
+# Takes the list of actual labels and its predictions
+def accuracy_score(Y_train, Yhat_train):
+    good_preds = 0
+    # Counting the good predictions made by the model
+    for i in range(len(Y_train)):
+        if Yhat_train[i] == Y_train[i]:
+            good_preds += 1
+    # Returning the percentage of good predictions
+    return (good_preds / len(Y_train)) * 100
+
+
 # Creating the model function which trains a model and return its parameters.
 def LogRegModel(X_train, X_test, Y_train, alpha, max_iter):
     # TODO Analyze this line, I changed it from shape[1] and it gives something odd
@@ -138,13 +149,13 @@ def LogRegModel(X_train, X_test, Y_train, alpha, max_iter):
     Yhat_train, _ = predict(X_train, W, B)
     Yhat, _ = predict(X_test, W, B)
 
-    # train_accuracy = accuracy_score(Y_train, Yhat_train)
+    train_accuracy = accuracy_score(Y_train, Yhat_train)
     # test_accuracy = accuracy_score(Y_test, Yhat)
     # conf_matrix = confusion_matrix(Y_test, Yhat, normalize='true')
 
     model = {"weights": W,
              "bias": B,
-             # "train_accuracy": train_accuracy,
+             "train_accuracy": train_accuracy,
              # "test_accuracy": test_accuracy,
              # "confusion_matrix": conf_matrix,
              "cost_history": cost_history}
@@ -166,6 +177,8 @@ plt.title('Evolution of the cost by iteration')
 plt.xlabel('Iteration')
 plt.ylabel('Cost')
 plt.show()
+
+print('The training accuracy of the model', model_0['train_accuracy'])
 
 # def optimize(x, y, learning_rate, iterations, parameters):
 #     size = x.shape[0]
