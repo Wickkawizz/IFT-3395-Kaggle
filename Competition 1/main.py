@@ -1,3 +1,4 @@
+import csv
 import sys
 
 import numpy as np
@@ -167,84 +168,82 @@ def sigmoid(x):
     return s
 
 
-print('Progress bar: 1 step each 50 iteration')
-model_0 = LogRegModel(mnist_data_normalized_training, mnist_data_normalized_test, Y_train_0, alpha=0.01, max_iter=500)
-print('Training completed!')
+def conf_matrix(testlabels, predlabels):
+    n_classes = int(max(testlabels))
+    matrix = np.zeros((n_classes, n_classes))
 
-cost = np.concatenate(model_0['cost_history']).ravel().tolist()
-plt.plot(list(range(len(cost))), cost)
-plt.title('Evolution of the cost by iteration')
-plt.xlabel('Iteration')
-plt.ylabel('Cost')
-plt.show()
+    for (test, pred) in zip(testlabels, predlabels):
+        # ---> Write code here
+        matrix[int(test) - 1, int(pred) - 1] += 1
+    return matrix
 
-print('The training accuracy of the model', model_0['train_accuracy'])
 
-# def optimize(x, y, learning_rate, iterations, parameters):
-#     size = x.shape[0]
-#     weight = parameters["weight"]
-#     bias = parameters["bias"]
-#     for i in range(iterations):
-#         sigma = sigmoid(np.dot(x, weight) + bias)
-#         loss = -1 / size * np.sum(y * np.log(sigma)) + (1 - y) * np.log(1 - sigma)
-#         dW = 1 / size * np.dot(x.T, (sigma - y))
-#         db = 1 / size * np.sum(sigma - y)
-#         weight -= learning_rate * dW
-#         bias -= learning_rate * db
+# This is for the model_0. Only to test out if the code works
+# print('Progress bar: 1 step each 50 iteration')
+# model_0 = LogRegModel(mnist_data_normalized_training, mnist_data_normalized_test, Y_train_0, alpha=0.01, max_iter=500)
+# print('Training completed!')
 #
-#     parameters["weight"] = weight
-#     parameters["bias"] = bias
-#     return parameters
+# cost = np.concatenate(model_0['cost_history']).ravel().tolist()
+# plt.plot(list(range(len(cost))), cost)
+# plt.title('Evolution of the cost by iteration')
+# plt.xlabel('Iteration')
+# plt.ylabel('Cost')
+# plt.show()
 #
-#
-# print(data.shape[1])
-# init_parameters = {}
-# init_parameters["weight"] = np.zeros(data.shape[1])
-# init_parameters["bias"] = 0
-#
-#
-# def train(x, y, learning_rate, iterations):
-#     parameters_out = optimize(x, y, learning_rate, iterations, init_parameters)
-#     return parameters_out
-#
-#
-# # Training the model
-# parameters_out = train(data, labels.iloc[:, 1], learning_rate=0.02, iterations=1000)
-#
-# # Predictions using the model
-# output_values = np.dot(data[:10], parameters_out["weight"]) + parameters_out["bias"]
-# predictions = sigmoid(output_values) >= 1 / 2
-# print(predictions)
-#
-# # Loading the data into memory
-# with open("train.csv", 'r', newline='') as train:
-#     with open("train_result.csv", 'r', newline='') as labels:
-#         # Training the model
-#         # Reading the data set (takes a while)
-#         train_reader = csv.reader(train, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-#         train_data = np.asarray(list(train_reader))
-#         print(np.shape(train_data))
-#         # (50001, 1569), 1569 features and 50001 rows
-#
-#         # Reading the labels
-#         labels_reader = csv.reader(labels, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-#         train_labels = np.asarray(list(labels_reader))
-#
-#         train_labels = np.asarray(train_labels)
-#         print(np.shape(train_labels))
-#         # (50001, 2), we only need the second column, because the first one is simply an index
-#
-#         # TODO Implement a training algorithm with sklearn
-#
-#         # TODO Implement a validation technique to choose the hyper parameter properly
-#
-#         # TODO Implement the testing phase with the test.csv data set
-#
-#         # knn_classifier = sklearn.neighbors.KNeighborsClassifier()
-#         # knn_classifier.fit(train_data[1:], train_labels[])
-#
-#         # # Cross validation for SVM
-#         # clf = sklearn.svm.SVC(kernel='linear', C=1, random_state=42)
-#         # scores = cross_val_score(clf, X, y, cv=5)
-#         # scores
-#         # array([0.96..., 1. , 0.96..., 0.96..., 1. ])
+# print('The training accuracy of the model', model_0['train_accuracy'])
+
+models_list = []
+models_name_list = ['model_0', 'model_1', 'model_2', 'model_3', 'model_4', 'model_5', 'model_6',
+                    'model_7', 'model_8', 'model_9', 'model_10', 'model_11', 'model_12', 'model_13', 'model_14',
+                    'model_15', 'model_16',
+                    'model_17', 'model_18']
+Y_train_list = [Y_train_0, Y_train_1, Y_train_2, Y_train_3, Y_train_4, Y_train_5, Y_train_6,
+                Y_train_7, Y_train_8, Y_train_9, Y_train_10, Y_train_11, Y_train_12, Y_train_13, Y_train_14, Y_train_15,
+                Y_train_16, Y_train_17, Y_train_18]
+
+# We can't do the test_list, because we don't have the labels for the tests
+# Y_test_list = [Y_test_0, Y_test_1, Y_test_2, Y_test_3, Y_test_4, Y_test_5, Y_test_6, Y_test_7,
+#               Y_test_8, Y_test_9]
+print('Training of a classifier for each digit:')
+for i in range(18):
+    print('Training of the model: ', models_name_list[i], ', to recognize the digit: ', i)
+    print('Training progress bar: 1 step each 50 iteration')
+    model = LogRegModel(mnist_data_normalized_training, mnist_data_normalized_test, Y_train_list[i], alpha=0.01,
+                        max_iter=1000)
+    print('Training completed!')
+    print('Accuracy:', model['train_accuracy'])
+    print('-' * 60)
+    models_list.append(model)
+
+accuracy_list = []
+for i in range(len(models_list)):
+    accuracy_list.append(models_list[i]['train_accuracy'])
+ove_vs_all_accuracy = np.mean(accuracy_list)
+print('The accuracy of the One-Vs-All model is:', ove_vs_all_accuracy)
+
+
+def one_vs_all(data, models_list):
+    pred_matrix = np.zeros((data.shape[0], 19))
+    for i in range(len(models_list)):
+        W = models_list[i]['weights']
+        B = models_list[i]['bias']
+        Yhat, Yhat_prob = predict(data, W, B)
+        pred_matrix[:, i] = Yhat_prob.T
+    max_prob_vec = np.amax(pred_matrix, axis=1, keepdims=True)
+    pred_matrix_max_prob = (pred_matrix == max_prob_vec).astype(int)
+    labels = []
+    for j in range(pred_matrix_max_prob.shape[0]):
+        idx = np.where(pred_matrix_max_prob[j, :] == 1)
+        labels.append(idx)
+    labels = np.vstack(labels).flatten()
+    return labels
+
+
+pred_label = one_vs_all(test, models_list)
+#index_list = [range(50000)]
+df = pd.DataFrame(pred_label, columns=['Index', 'Class'])
+#df['Class'] = pred_label
+df.to_csv('test_result.csv', encoding='utf-8')
+
+# We don't have the test labels, so we can't make the confusion matrix
+# conf_matrix = conf_matrix(Y_test, pred_label)
