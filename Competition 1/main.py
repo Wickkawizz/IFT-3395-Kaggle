@@ -243,7 +243,7 @@ pred_label = one_vs_all(test, models_list)
 #index_list = [range(50000)]
 df = pd.DataFrame(pred_label, columns=['Index', 'Class'])
 #df['Class'] = pred_label
-df.to_csv('test_result.csv', encoding='utf-8')
+df.to_csv('test_result_logistic.csv', encoding='utf-8')
 
 # We don't have the test labels, so we can't make the confusion matrix
 # conf_matrix = conf_matrix(Y_test, pred_label)
