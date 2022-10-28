@@ -17,32 +17,37 @@ X_test = pd.read_csv('test.csv')
 X_test = X_test.to_numpy()[:, :1568]
 
 # Multi-Level perceptron for the classifier
-mlp = MLPClassifier(max_iter=500)
+# mlp = MLPClassifier(max_iter=500)
+mlp = MLPClassifier(activation='relu', alpha=0.05, hidden_layer_sizes=(50, 100, 50), learning_rate='constant',
+                    solver='adam', max_iter=500)
 
+#This is for searching for the best parameters, once found, no need to run it again
 # Defining a parameter space to search for the best parameters to use
-parameter_space = {
-    'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)],
-    'activation': ['tanh', 'relu'],
-    'solver': ['sgd', 'adam'],
-    'alpha': [0.0001, 0.05, 0.1],
-    'learning_rate': ['constant', 'adaptive']
-    #'max_iter': [100, 200, 500]
-}
-clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3)
-clf.fit(X_training, Y_training)
+# parameter_space = {
+#     'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)],
+#     'activation': ['tanh', 'relu'],
+#     'solver': ['sgd', 'adam'],
+#     'alpha': [0.0001, 0.05, 0.1],
+#     'learning_rate': ['constant', 'adaptive']
+#     #'max_iter': [100, 200, 500]
+# }
+
+# clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3)
+# clf.fit(X_training, Y_training)
 
 # Best parameter set
-print('Best parameters found:\n', clf.best_params_)
+#print('Best parameters found:\n', clf.best_params_)
 
 # All results
-means = clf.cv_results_['mean_test_score']
-stds = clf.cv_results_['std_test_score']
-for mean, std, params in zip(means, stds, clf.cv_results_['params']):
-    print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+# means = clf.cv_results_['mean_test_score']
+# stds = clf.cv_results_['std_test_score']
+# for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+#     print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
 
-y_pred = clf.predict(X_test)
+mlp.fit(X_training, Y_training)
+y_pred = np.vstack(mlp.predict(X_test)).flatten()
 print(y_pred)
 # TODO Fix this
 # ValueError: Shape of passed values is (10000, 1), indices imply (10000, 2)
-df = pd.DataFrame(y_pred, columns=['Index', 'Class'], index=True)
+df = pd.DataFrame(y_pred, columns=['Class'])
 df.to_csv('test_result_mlp.csv', encoding='utf-8')
