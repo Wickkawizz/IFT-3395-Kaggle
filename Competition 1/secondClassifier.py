@@ -47,7 +47,6 @@ mlp = MLPClassifier(activation='relu', alpha=0.05, hidden_layer_sizes=(50, 100, 
 mlp.fit(X_training, Y_training)
 y_pred = np.vstack(mlp.predict(X_test)).flatten()
 print(y_pred)
-# TODO Fix this
 # ValueError: Shape of passed values is (10000, 1), indices imply (10000, 2)
 df = pd.DataFrame(y_pred, columns=['Class'])
 df.to_csv('test_result_mlp.csv', encoding='utf-8')

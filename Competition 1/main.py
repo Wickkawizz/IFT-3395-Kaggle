@@ -178,19 +178,19 @@ def conf_matrix(testlabels, predlabels):
     return matrix
 
 
-# This is for the model_0. Only to test out if the code works
-# print('Progress bar: 1 step each 50 iteration')
-# model_0 = LogRegModel(mnist_data_normalized_training, mnist_data_normalized_test, Y_train_0, alpha=0.01, max_iter=500)
-# print('Training completed!')
-#
-# cost = np.concatenate(model_0['cost_history']).ravel().tolist()
-# plt.plot(list(range(len(cost))), cost)
-# plt.title('Evolution of the cost by iteration')
-# plt.xlabel('Iteration')
-# plt.ylabel('Cost')
-# plt.show()
-#
-# print('The training accuracy of the model', model_0['train_accuracy'])
+#This is for the model_0. Only to test out if the code works
+print('Progress bar: 1 step each 50 iteration')
+model_0 = LogRegModel(mnist_data_normalized_training, mnist_data_normalized_test, Y_train_0, alpha=0.01, max_iter=500)
+print('Training completed!')
+
+cost = np.concatenate(model_0['cost_history']).ravel().tolist()
+plt.plot(list(range(len(cost))), cost)
+plt.title('Evolution of the cost by iteration')
+plt.xlabel('Iteration')
+plt.ylabel('Cost')
+plt.show()
+
+print('The training accuracy of the model', model_0['train_accuracy'])
 
 models_list = []
 models_name_list = ['model_0', 'model_1', 'model_2', 'model_3', 'model_4', 'model_5', 'model_6',
@@ -241,7 +241,7 @@ def one_vs_all(data, models_list):
 
 pred_label = one_vs_all(test, models_list)
 #index_list = [range(50000)]
-df = pd.DataFrame(pred_label, columns=['Index', 'Class'])
+df = pd.DataFrame(pred_label, columns=['Class'])
 #df['Class'] = pred_label
 df.to_csv('test_result_logistic.csv', encoding='utf-8')
 
